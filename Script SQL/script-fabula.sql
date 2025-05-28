@@ -124,9 +124,42 @@ INSERT INTO chimarrao (id, fk_gaucho, receita_id) VALUES
 (4, 4, 1),
 (5, 5, 2);
 
+-- SELECTS NIVEL FÁCIL
+
+SELECT nome, data_nasc FROM gaucho;
+
+SELECT nome FROM vendinha; 
+
 SELECT nome FROM gaucho WHERE nome LIKE '%o';
+
 SELECT nome FROM gaucho WHERE nome LIKE '%n' AND data_nasc > '2000-01-01';
+
 SELECT nome, data_nasc FROM gaucho ORDER BY data_nasc ASC;
+
 SELECT nome, intensidade FROM erva WHERE intensidade = 'Alta';
+
 SELECT data_pedido FROM pedido WHERE YEAR(data_pedido) = 2025;
+
+SELECT DISTINCT(nome) FROM erva WHERE preco > 30;
+
+SELECT DISTINCT(nome), preco FROM erva ORDER BY preco desc;
+
+SELECT DISTINCT(nome), preco, intensidade FROM erva WHERE intensidade = 'Alta'; 
+
+SELECT DISTINCT(nome), preco FROM erva ORDER BY preco desc limit 3;
+
+SELECT DISTINCT(nome), preco FROM erva ORDER BY preco asc limit 3;
+
+SELECT nome, data_nasc FROM gaucho ORDER BY data_nasc ASC LIMIT 3;
+
+SELECT nome, data_nasc FROM gaucho ORDER BY data_nasc DESC LIMIT 3;
+
+SELECT nome FROM gaucho WHERE nome LIKE '_a%';
+
+
+-- SELECTS NIVEL MÉDIO
+
+SELECT v.nome, g.nome FROM vendinha v
+	JOIN gaucho g ON g.id = fk_dono; 
+
 
