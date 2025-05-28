@@ -24,15 +24,17 @@ CREATE TABLE erva (
   fk_vendinha INT NOT NULL,
   nome VARCHAR(45) NOT NULL,
   intensidade VARCHAR(20) NOT NULL,
-  FOREIGN KEY (fk_vendinha) REFERENCES vendinha(id)
+  FOREIGN KEY (fk_vendinha) REFERENCES vendinha(id),
+  preco DOUBLE
 );
 
 -- Tabela: pedido
 CREATE TABLE pedido (
+  id INT,
   fk_gaucho INT NOT NULL,
   fk_item INT NOT NULL,
   data_pedido DATE,
-  PRIMARY KEY (fk_gaucho, fk_item),
+  PRIMARY KEY (fk_gaucho, fk_item, id),
   FOREIGN KEY (fk_gaucho) REFERENCES gaucho(id),
   FOREIGN KEY (fk_item) REFERENCES erva(id)
 );
@@ -117,4 +119,9 @@ INSERT INTO chimarrao (id, fk_gaucho, receita_id) VALUES
 (4, 4, 1),
 (5, 5, 2);
 
+SELECT nome FROM gaucho WHERE nome LIKE '%o';
+SELECT nome FROM gaucho WHERE nome LIKE '%n' AND data_nasc > '2000-01-01';
+SELECT nome, data_nasc FROM gaucho ORDER BY data_nasc ASC;
+SELECT nome, intensidade FROM erva WHERE intensidade = 'Alta';
+SELECT data_pedido FROM pedido WHERE YEAR(data_pedido) = 2025;
 
