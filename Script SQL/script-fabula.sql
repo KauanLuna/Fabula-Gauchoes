@@ -91,19 +91,24 @@ INSERT INTO vendinha (id, nome, fk_dono) VALUES
 (4, 'Vendinha Dos Gurizao', 9),
 (5, 'Vendinha Cupinxa', 10);
 
-INSERT INTO erva (id, fk_vendinha, nome, intensidade) VALUES
-(1, 1, 'Erva Mate Tradicional', 'Alta'),
-(2, 2, 'Erva Mate Orgânica', 'Média'),
-(3, 3, 'Erva Mate Aromática', 'Baixa'),
-(4, 4, 'Erva Mate Premium', 'Alta'),
-(5, 5, 'Erva Mate Gourmet', 'Média');
+INSERT INTO erva (id, fk_vendinha, nome, intensidade, preco) VALUES
+(1, 1, 'Erva Mate Tradicional', 'Alta', 10),
+(2, 2, 'Erva Mate Orgânica', 'Média', 25),
+(3, 3, 'Erva Mate Aromática', 'Baixa', 20),
+(4, 4, 'Erva Mate Premium', 'Alta', 45),
+(5, 5, 'Erva Mate Gourmet', 'Média', 35),
+(6, 2, 'Erva Mate Tradicional', 'Alta', 10),
+(7, 1, 'Erva Mate Orgânica', 'Média', 25),
+(8, 3, 'Erva Mate Aromática', 'Baixa', 20),
+(9, 5, 'Erva Mate Premium', 'Alta', 45),
+(10, 4, 'Erva Mate Gourmet', 'Média', 35);
 
-INSERT INTO pedido (fk_gaucho, fk_item, data_pedido) VALUES
-(1, 1, '2024-11-21'),
-(2, 2, '2025-03-22'),
-(3, 3, '2025-06-03'),
-(4, 4, '2024-08-14'),
-(5, 5, '2025-12-15');
+INSERT INTO pedido (id, fk_gaucho, fk_item, data_pedido) VALUES
+(1, 1, 1, '2024-11-21'),
+(2, 2, 2, '2025-03-22'),
+(3, 3, 3, '2025-06-03'),
+(4, 4, 4, '2024-08-14'),
+(5, 5, 5, '2025-12-15');
 
 INSERT INTO receita (id, desc_receita, fk_erva) VALUES
 (1, 'Receita Tradicional', 1),
