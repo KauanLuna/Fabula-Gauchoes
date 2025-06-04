@@ -51,10 +51,10 @@ CREATE TABLE receita (
 CREATE TABLE chimarrao (
   id INT NOT NULL,
   fk_gaucho INT NOT NULL,
-  receita_id INT NOT NULL,
-  PRIMARY KEY (id, fk_gaucho, receita_id),
+  fk_receita INT NOT NULL,
+  PRIMARY KEY (id, fk_gaucho, fk_receita),
   FOREIGN KEY (fk_gaucho) REFERENCES gaucho(id),
-  FOREIGN KEY (receita_id) REFERENCES receita(id)
+  FOREIGN KEY (fk_receita) REFERENCES receita(id)
 );
 
 -- Tabela: turma
@@ -117,12 +117,17 @@ INSERT INTO receita (id, desc_receita, fk_erva) VALUES
 (4, 'Receita Premium', 4),
 (5, 'Receita Gourmet', 5);
 
-INSERT INTO chimarrao (id, fk_gaucho, receita_id) VALUES
+INSERT INTO chimarrao (id, fk_gaucho, fk_receita) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 3),
 (4, 4, 1),
-(5, 5, 2);
+(5, 5, 2),
+(6, 6, 4),
+(7, 7, 4),
+(8, 8, 5),
+(9, 9, 5),
+(10, 10, 3);
 
 -- SELECTS NIVEL FÁCIL
 
@@ -157,9 +162,77 @@ SELECT nome, data_nasc FROM gaucho ORDER BY data_nasc DESC LIMIT 3;
 SELECT nome FROM gaucho WHERE nome LIKE '_a%';
 
 
--- SELECTS NIVEL MÉDIO
+-- SELECTS NIVEL MÉDIOS
 
-SELECT v.nome, g.nome FROM vendinha v
-	JOIN gaucho g ON g.id = fk_dono; 
+SELECT v.nome, g.nome 
+	FROM vendinha v
+		JOIN gaucho g 
+			ON g.id = fk_dono;
+            
+SELECT v.nome, g.nome 
+	FROM vendinha v
+		JOIN gaucho g 
+			ON g.id = fk_dono
+				WHERE v.nome LIKE '%o' AND g.nome LIKE '%a%'
+					ORDER BY v.nome desc;
 
+SELECT r.id, e.nome, r.desc_receita 
+	FROM erva e
+		JOIN receita r 
+			ON e.id = r.fk_erva;
 
+SELECT e.nome, r.desc_receita 
+	FROM erva e
+		JOIN receita r 
+			ON e.id = r.fk_erva
+				WHERE e.intensidade = 'alta';
+                
+SELECT max(preco) as MaiorPreco
+	FROM erva;
+
+SELECT min(preco) as MenorPreco
+	FROM erva;
+
+SELECT ROUND(avg(preco), 2) as MédiaPreco
+	FROM erva WHERE intensidade = 'alta';
+    
+SELECT COUNT(id) as QuantidadeErvas
+	FROM erva WHERE intensidade = 'média';
+    
+SELECT v.nome, e.nome, e.intensidade, e.preco
+	FROM vendinha v
+		JOIN erva e
+			ON v.id = e.fk_vendinha
+				WHERE e.intensidade = 'média' AND v.nome LIKE '%o%' 
+					ORDER BY v.nome desc;
+
+SELECT COUNT(id) as QuantidadeDePedidos
+	FROM pedido;
+    
+-- SELECTS DIFICEIS
+
+-- SELECT
+-- 		g.nome,
+--         v.nome
+-- FROM
+-- 	gaucho g
+-- LEFT JOIN
+-- 	vendinha v
+-- ON 
+-- 	g.id  = v.fk_dono;
+
+SELECT g.nome,
+	c.id NumeroDoChimarrao,
+    e.preco
+		FROM gaucho g 
+			JOIN chimarrao c 
+				ON g.id = c.fk_gaucho
+					JOIN receita r
+						ON r.id = c.fk_receita
+							JOIN erva e
+								ON e.id = r.fk_erva
+									WHERE e.preco = (SELECT e.preco FROM erva e ORDER BY e.preco desc limit 1);
+
+SELECT 
+	
+		
