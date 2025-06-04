@@ -234,5 +234,30 @@ SELECT g.nome,
 									WHERE e.preco = (SELECT e.preco FROM erva e ORDER BY e.preco desc limit 1);
 
 SELECT 
-	
-		
+  g.nome AS nome_gaucho,
+  v.nome AS nome_vendinha,
+  e.nome AS nome_erva,
+  e.preco,
+  r.desc_receita,
+  (
+    SELECT COUNT(*)
+    FROM pedido p
+    WHERE p.fk_gaucho = g.id
+      AND p.fk_item = e.id
+  ) AS qtd_pedidos_erva_gaucho,
+  (
+    SELECT AVG(preco)
+    FROM erva
+    WHERE fk_vendinha = v.id
+  ) AS media_preco_vendinha
+FROM gaucho g
+JOIN pedido p ON p.fk_gaucho = g.id
+JOIN erva e ON e.id = p.fk_item
+JOIN vendinha v ON v.id = e.fk_vendinha
+LEFT JOIN receita r ON r.fk_erva = e.id
+WHERE e.preco > (
+  SELECT AVG(preco) FROM erva
+)
+ORDER BY qtd_pedidos_erva_gaucho DESC, media_preco_vendinha DESC;
+
+
