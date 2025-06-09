@@ -164,74 +164,29 @@ SELECT nome FROM gaucho WHERE nome LIKE '_a%';
 
 -- SELECTS NIVEL MÉDIOS
 
-SELECT v.nome, g.nome 
-	FROM vendinha v
-		JOIN gaucho g 
-			ON g.id = fk_dono;
+SELECT v.nome, g.nome FROM vendinha v JOIN gaucho g ON g.id = fk_dono;
             
-SELECT v.nome, g.nome 
-	FROM vendinha v
-		JOIN gaucho g 
-			ON g.id = fk_dono
-				WHERE v.nome LIKE '%o' AND g.nome LIKE '%a%'
-					ORDER BY v.nome desc;
+SELECT v.nome, g.nome FROM vendinha v JOIN gaucho g ON g.id = fk_dono WHERE v.nome LIKE '%o' AND g.nome LIKE '%a%' ORDER BY v.nome desc;
 
-SELECT r.id, e.nome, r.desc_receita 
-	FROM erva e
-		JOIN receita r 
-			ON e.id = r.fk_erva;
+SELECT r.id, e.nome, r.desc_receita FROM erva e JOIN receita r ON e.id = r.fk_erva;
 
-SELECT e.nome, r.desc_receita 
-	FROM erva e
-		JOIN receita r 
-			ON e.id = r.fk_erva
-				WHERE e.intensidade = 'alta';
+SELECT e.nome, r.desc_receita FROM erva e JOIN receita r ON e.id = r.fk_erva WHERE e.intensidade = 'alta';
                 
-SELECT max(preco) as MaiorPreco
-	FROM erva;
+SELECT max(preco) as MaiorPreco FROM erva;
 
-SELECT min(preco) as MenorPreco
-	FROM erva;
+SELECT min(preco) as MenorPreco FROM erva;
 
-SELECT ROUND(avg(preco), 2) as MédiaPreco
-	FROM erva WHERE intensidade = 'alta';
+SELECT ROUND(avg(preco), 2) as MédiaPreco FROM erva WHERE intensidade = 'alta';
     
-SELECT COUNT(id) as QuantidadeErvas
-	FROM erva WHERE intensidade = 'média';
+SELECT COUNT(id) as QuantidadeErvas FROM erva WHERE intensidade = 'média';
     
-SELECT v.nome, e.nome, e.intensidade, e.preco
-	FROM vendinha v
-		JOIN erva e
-			ON v.id = e.fk_vendinha
-				WHERE e.intensidade = 'média' AND v.nome LIKE '%o%' 
-					ORDER BY v.nome desc;
+SELECT v.nome, e.nome, e.intensidade, e.preco FROM vendinha v JOIN erva e ON v.id = e.fk_vendinha WHERE e.intensidade = 'média' AND v.nome LIKE '%o%' ORDER BY v.nome desc;
 
-SELECT COUNT(id) as QuantidadeDePedidos
-	FROM pedido;
+SELECT COUNT(id) as QuantidadeDePedidos FROM pedido;
     
 -- SELECTS DIFICEIS
 
--- SELECT
--- 		g.nome,
---         v.nome
--- FROM
--- 	gaucho g
--- LEFT JOIN
--- 	vendinha v
--- ON 
--- 	g.id  = v.fk_dono;
-
-SELECT g.nome,
-	c.id NumeroDoChimarrao,
-    e.preco
-		FROM gaucho g 
-			JOIN chimarrao c 
-				ON g.id = c.fk_gaucho
-					JOIN receita r
-						ON r.id = c.fk_receita
-							JOIN erva e
-								ON e.id = r.fk_erva
-									WHERE e.preco = (SELECT e.preco FROM erva e ORDER BY e.preco desc limit 1);
+SELECT g.nome, c.id NumeroDoChimarrao, e.preco FROM gaucho g JOIN chimarrao c ON g.id = c.fk_gaucho JOIN receita r ON r.id = c.fk_receita JOIN erva e ON e.id = r.fk_erva WHERE e.preco = (SELECT e.preco FROM erva e ORDER BY e.preco desc limit 1);
 
 SELECT 
   g.nome AS nome_gaucho,
@@ -259,5 +214,40 @@ WHERE e.preco > (
   SELECT AVG(preco) FROM erva
 )
 ORDER BY qtd_pedidos_erva_gaucho DESC, media_preco_vendinha DESC;
+
+select g.nome as 'Nome do gauchão',
+case 
+when t.fk_gaucho is not null then 'Gauchão é da turma'
+else 'Gauchão não cola com os bacanas'
+end as 'Turma',
+ifnull(v.nome, 'Não tem vendinha') as 'Nome da vendinha'
+from gaucho g left join vendinha v
+on g.id = v.fk_DONO
+LEFT JOIN turma t
+on g.id = t.fk_gaucho;
+
+select g.nome as 'Nome do gauchão',
+p.id as 'Número do pedido',
+p.data_pedido as 'Data do pedido',
+e.nome as 'Nome da erva',
+e.intensidade as 'Intensidade da erva'
+from
+gaucho g join pedido p 
+on g.id = p.fk_gaucho
+join erva e 
+on p.fk_item = e.id
+group by g.nome, p.id, p.data_pedido, e.nome, e.intensidade
+having p.data_pedido between '2025-01-01' and '2025-12-31'
+and e.intensidade = 'Média';
+
+select
+count(g.id) as 'Quantidade de gauchos',
+count(p.id) as 'Quantidade de pedidos',
+sum(e.preco) as 'Soma de todos os preços',
+avg(e.preco) as 'Média de preço por erva'
+from gaucho g left join pedido p
+on g.id = p.fk_gaucho
+left join erva e 
+on p.fk_item = e.id;
 
 
